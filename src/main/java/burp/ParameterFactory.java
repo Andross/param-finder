@@ -2,6 +2,9 @@ package burp;
 
 import java.util.Map;
 import java.util.Set;
+
+import javax.swing.JTextField;
+
 import java.util.Map.Entry;
 import java.util.List;
 import java.util.HashMap;
@@ -26,7 +29,7 @@ import com.google.gson.JsonPrimitive;
 
 public class ParameterFactory {
 	public static Map<String, Set<String>> getAllParameters(IHttpRequestResponse[] history,
-			IBurpExtenderCallbacks callbacks, PrintWriter stdout, IExtensionHelpers helpers) {
+			IBurpExtenderCallbacks callbacks, PrintWriter stdout, PrintWriter stderr, IExtensionHelpers helpers) {
 		stdout.println("In getAllParameters, history length is " + history.length);
 		Map<String, Set<String>> uniqueInScopeParams = new HashMap<String, Set<String>>();
 
@@ -62,14 +65,14 @@ public class ParameterFactory {
 
 				}
 			} catch (Exception e) {
-				stdout.println(e);
+				stderr.println(e);
 			}
 
 		}
 		return uniqueInScopeParams;
 	}
 
-	public static String printParams(Set<String> allParams, String scope, PrintWriter stdout) {
+	public static String printParams(Set<String> allParams, String scope, PrintWriter stdout, JTextField pathTxtField) {
 		PrintWriter writer;
 		String pattern = "yyyy-MM-dd";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -78,10 +81,10 @@ public class ParameterFactory {
 
 		try {
 			String fileName = scope + date + ".txt";
-			String currentDir = System.getProperty("user.dir");
+			String currentDir = pathTxtField.getText();
 
 			stdout.println("Writing file to system: " + currentDir + File.separator + fileName);
-			writer = new PrintWriter(scope + date + ".txt", "UTF-8");
+			writer = new PrintWriter(currentDir + File.separator + scope + date + ".txt", "UTF-8");
 			for (Iterator<String> it = allParams.iterator(); it.hasNext();) {
 				String param = it.next();
 				params = params + param + "\n";

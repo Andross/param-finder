@@ -27,7 +27,7 @@ public class BurpExtender implements IBurpExtender {
 
         //Map<URL, Set<String>> uniqueInScopeParams = getAllParameters(history);
         stdout.println("Creating tab...");
-        ParamFinderTab tab = new ParamFinderTab(callbacks, stdout, helpers);
+        ParamFinderTab tab = new ParamFinderTab(callbacks, stdout, stderr, helpers);
         
     }
     

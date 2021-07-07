@@ -2,11 +2,7 @@ package burp;
 
 import java.io.PrintWriter;
 import java.awt.Component;
-
-import javax.swing.BoxLayout;
-import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,14 +11,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-
 import java.awt.GridLayout;
 import java.awt.*;
-import java.net.URL;
 import java.awt.event.*;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 
 public class ParamFinderTab implements ITab {
@@ -33,8 +28,9 @@ public class ParamFinderTab implements ITab {
     private JButton createListsBtn;
     private JTextField pathTxtField;
     private JPanel firstSection;
+    private List<JScrollPane> allScrollPanes = new ArrayList<JScrollPane>();
 
-    public ParamFinderTab(final IBurpExtenderCallbacks callbacks, final PrintWriter stdout, final IExtensionHelpers helpers){
+    public ParamFinderTab(final IBurpExtenderCallbacks callbacks, final PrintWriter stdout, final PrintWriter stderr, final IExtensionHelpers helpers){
     		
             SwingUtilities.invokeLater(new Runnable() 
             {
@@ -64,14 +60,18 @@ public class ParamFinderTab implements ITab {
 
                     createListsBtn.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                           System.out.println("Create list button pressed.");
+                           //System.out.println("Create list button pressed.");
+                           
+                           stdout.println("Removing all old JScrollPanes");
+                           removeOldScrollPanes();
                            IHttpRequestResponse[] history = callbacks.getProxyHistory();
-						Map<String, Set<String>> uniqueInScopeParams = ParameterFactory.getAllParameters(history, callbacks, stdout, helpers );
+						Map<String, Set<String>> uniqueInScopeParams = ParameterFactory.getAllParameters(history, callbacks, stdout, stderr, helpers);
                            for (Map.Entry<String, Set<String>> set : uniqueInScopeParams.entrySet()) {
                                 //stdout.println("Current scope is: " + set.getKey());
-                                String params = ParameterFactory.printParams(set.getValue(), set.getKey(), stdout);
+                                String params = ParameterFactory.printParams(set.getValue(), set.getKey(), stdout, pathTxtField);
                                 
                                 JScrollPane paramScrollPane = createScrollBoxes(params, set.getKey(), stdout);
+                                allScrollPanes.add(paramScrollPane);
                                 panel.add(paramScrollPane);
                             }
                            
@@ -90,12 +90,8 @@ public class ParamFinderTab implements ITab {
     }
     public JScrollPane createScrollBoxes(String params, String scope, PrintWriter stdout){
             
-            JPanel newPanel = new JPanel();
             JTextArea paramTextArea = new JTextArea();
-
-            stdout.println("Test2");
-            JLabel scopeLabel = new JLabel(scope);
-            stdout.println("Params are: " + params);
+            //stdout.println("Params are: " + params);
             paramTextArea.setBorder(new TitledBorder(new EtchedBorder(), scope));
             paramTextArea.setText(params);
             JScrollPane newScrollPane = new JScrollPane(paramTextArea);
@@ -106,8 +102,13 @@ public class ParamFinderTab implements ITab {
             
             return newScrollPane;
     }
-
-
+    
+    private void removeOldScrollPanes()
+    {
+    	for(JScrollPane scrollPane : allScrollPanes) {
+    		panel.remove(scrollPane);
+    	}
+    }
     @Override
     public String getTabCaption()
     {

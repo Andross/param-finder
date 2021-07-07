@@ -14,7 +14,7 @@ public class JsonParams {
     private final JsonElement rootElement;
 
     private void processJsonElement(JsonElement element, String name, PrintWriter stdout) {
-        stdout.println("Processing Json Element");
+        //stdout.println("Processing Json Element");
     	if (element.isJsonArray()) {
         	//stdout.println("Array");
             for (JsonElement e : element.getAsJsonArray()) {
