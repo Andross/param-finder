@@ -77,6 +77,22 @@ public class ParamFinderTab implements ITab {
                     });
                     firstSection.add(hackerMusic);
 
+                    JButton dogecoin = new JButton("Buy DOGE");
+                    dogecoin.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                                try {
+                                    Desktop.getDesktop().browse(new URI("https://www.coinbase.com/price/dogecoin"));
+                                }
+                                catch (URISyntaxException | IOException err) {
+                                    err.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                    firstSection.add(dogecoin);
+
                     createListsBtn.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                            //System.out.println("Create list button pressed.");
