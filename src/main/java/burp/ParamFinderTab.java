@@ -1,5 +1,6 @@
 package burp;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.awt.Component;
 import javax.swing.JButton;
@@ -14,6 +15,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.GridLayout;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -57,6 +60,38 @@ public class ParamFinderTab implements ITab {
                     firstSection.add(pathLabel);
                     firstSection.add(pathTxtField);
                     firstSection.add(createListsBtn);
+
+                    JButton hackerMusic = new JButton("Hacker Music");
+                    hackerMusic.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                                try {
+                                    Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
+                                }
+                                catch (URISyntaxException | IOException err) {
+                                    err.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                    firstSection.add(hackerMusic);
+
+                    JButton dogecoin = new JButton("Buy DOGE");
+                    dogecoin.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                                try {
+                                    Desktop.getDesktop().browse(new URI("https://www.coinbase.com/price/dogecoin"));
+                                }
+                                catch (URISyntaxException | IOException err) {
+                                    err.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                    firstSection.add(dogecoin);
 
                     createListsBtn.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {

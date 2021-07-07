@@ -11,6 +11,8 @@ public class BurpExtender implements IBurpExtender {
     private static BurpExtender burpExtender;
 
 
+    // This comment is extremely important
+
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
         // keep a reference to our callbacks object
         this.callbacks = callbacks;
